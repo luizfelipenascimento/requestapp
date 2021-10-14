@@ -19,8 +19,13 @@ import java.net.MalformedURLException;
  */
 public class GetRequestTest {
 
-    private String url = "http://example.com/user";
-    
+    private String url;
+
+    @Before
+    public void configure() {
+        this.url = "http://example.com/user";
+    }
+
     @Test
     public void shouldConfigureURLParametersWhenNoneIsProvided() throws IOException {
         GetRequest getRequest = new GetRequest(this.url);
@@ -36,7 +41,17 @@ public class GetRequestTest {
     }
     
     @Test
-    public void shouldppend() {
+    public void shouldAppendNewURLParameter() throws IOException {
+        String expectedUrl = this.url + "?nome=luiz&age=26";
 
+        GetRequest getRequest = new GetRequest(expectedUrl);
+        getRequest.addParameter("cpf", "000000000");
+
+        expectedUrl += "&cpf=000000000";
+
+        HttpURLConnection connection = getRequest.getHttpConnection();
+        String url = connection.getURL().toString();
+
+        assertEquals(expectedUrl, url);
     }
 }
