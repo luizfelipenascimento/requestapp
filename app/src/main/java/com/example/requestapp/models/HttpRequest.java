@@ -19,7 +19,7 @@ public abstract class HttpRequest {
         headers = new HashMap<>();
     }
 
-    public HttpURLConnection getHttpConnection() throws IOException {
+    public synchronized HttpURLConnection getHttpConnection() throws IOException {
 
         HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
         connection.setRequestMethod(this.method);
