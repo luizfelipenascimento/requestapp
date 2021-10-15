@@ -48,7 +48,6 @@ public class GetRequest extends HttpRequest {
     @Override
     public HttpURLConnection getHttpConnection() throws IOException {
         configureParameters();
-        System.out.println(url);
         return super.getHttpConnection();
     }
 }
