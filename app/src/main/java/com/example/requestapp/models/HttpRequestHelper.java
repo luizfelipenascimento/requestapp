@@ -1,54 +1,37 @@
 package com.example.requestapp.models;
 
-import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class HttpRequestHelper {
 
-    private URL url;
-    private String method;
-    private Map<String, String> headers;
+    private ExecutorService executorService;
+    private HttpResponse httpResponse;
 
-    public HttpRequestHelper(String method, String url) throws MalformedURLException {
-        this.method = method;
-        this.url = new URL(url);
-        this.headers = new HashMap<>();
+    public HttpRequestHelper() {
+        executorService = Executors.newSingleThreadExecutor();
     }
 
-    public void makeRequest() {
-        HttpURLConnection http;
-            try {
-                http = (HttpURLConnection) url.openConnection();
-                http.setRequestMethod(method);
-
-                for(Map.Entry<String, String> entry : headers.entrySet())
-                    http.addRequestProperty(entry.getKey(), entry.getValue());
-
-                InputStream in = new BufferedInputStream(http.getInputStream());
-
-                System.out.println(in);
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-
+    public void makeRequest(final HttpRequest request) {
+        executorService.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    final HttpURLConnection connection = request.getHttpConnection();
+                    InputStream in = connection.getInputStream();
+                    System.out.println(in);
+                    connection.disconnect();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
+        });
     }
 
-    public void addHeader(String key, String value) {
-        headers.put(key, value);
-    }
-
-    public void setHeaders(Map<String, String> headers) {
-        this.headers = headers;
+    public HttpResponse getHttpResponse() {
+        return httpResponse;
     }
 }
