@@ -5,6 +5,8 @@ import androidx.lifecycle.ViewModelProvider;
 
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputFilter;
+import android.text.Spanned;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,6 +27,15 @@ public class MainActivity extends AppCompatActivity {
 
         urlEditView = this.findViewById(R.id.url_edit_text);
         requestViewModel = new ViewModelProvider(this).get(RequestViewModel.class);
+
+        urlEditView.setFilters(new InputFilter[] {
+                new InputFilter.AllCaps() {
+                    @Override
+                    public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
+                        return String.valueOf(source).toLowerCase();
+                    }
+                }
+        });
     }
 
     public void sendRequest(View view) {
