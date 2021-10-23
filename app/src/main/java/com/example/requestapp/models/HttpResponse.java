@@ -2,10 +2,12 @@ package com.example.requestapp.models;
 
 public class HttpResponse {
 
-    public String content;
+    private String header;
+    private short statusCode;
+    private String body;
 
-    public HttpResponse(String content) {
-        this.content = content;
+    public HttpResponse(String body) {
+        this.body = body;
     }
 
 }
